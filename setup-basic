@@ -1,7 +1,14 @@
 #installs NGINX + RTMP module Basic => https://obsproject.com/forum/resources/how-to-set-up-your-own-private-rtmp-server-using-nginx.50/
 
-Echo "installing build-essential libpcre3 libpcre3-dev libssl-dev unzip"
-apt-get install -y build-essential libpcre3 libpcre3-dev libssl-dev unzip
+apt-get update
+
+echo "adding ffmpeg"
+add-apt-repository -y ppa:mc3man/trusty-media
+
+apt-get update
+
+echo "installing build-essential libpcre3 libpcre3-dev libssl-dev unzip"
+apt-get install -y build-essential libpcre3 libpcre3-dev libssl-dev unzip ffmpeg
 
 echo "downloading latest nginx version and rtmp module"
 wget https://nginx.org/download/nginx-1.11.5.tar.gz
@@ -22,6 +29,14 @@ make
 
 echo "make install"
 make install
+
+echo "create src, hls and dash directory"
+
+mkdir /usr/local/nginx/html/src
+mkdir /usr/local/nginx/html/hls
+mkdir /usr/local/nginx/html/dash
+mkdir /tmp/hls
+mkdir /tmp/dash
 
 echo "starting nginx"
 /usr/local/nginx/sbin/nginx
