@@ -2,5 +2,9 @@
 
 /usr/local/nginx/sbin/nginx -s stop
 rm /usr/local/nginx/conf/nginx.conf
-cp $1 /usr/local/nginx/conf/nginx.conf
-/usr/local/nginx/sbin/nginx
+cp defaultconfig nginx.conf
+cat $1 >> nginx.conf
+mv nginx.conf /usr/local/nginx/conf/nginx.conf
+
+#cp $1 /usr/local/nginx/conf/nginx.conf
+#/usr/local/nginx/sbin/nginx
