@@ -7,4 +7,5 @@ cat $1 >> nginx.conf
 mv nginx.conf /usr/local/nginx/conf/nginx.conf
 
 #cp $1 /usr/local/nginx/conf/nginx.conf
-#/usr/local/nginx/sbin/nginx
+
+/usr/local/nginx/sbin/nginx
