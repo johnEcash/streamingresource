@@ -1,0 +1,6 @@
+#update nginx.conf to adjusted file usage: generateconfig test.conf
+
+/usr/local/nginx/sbin/nginx -s stop
+rm /usr/local/nginx/conf/nginx.conf
+cp $1 /usr/local/nginx/conf/nginx.conf
+/usr/local/nginx/sbin/nginx
