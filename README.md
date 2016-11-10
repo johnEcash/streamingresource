@@ -1,0 +1,2 @@
+# streamingresource
+Server setup
