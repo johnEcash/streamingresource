@@ -1,0 +1,62 @@
+rtmp {
+    server {
+        listen 1935;
+
+        application app {
+            live on;
+
+            exec ffmpeg -i rtmp://localhost/src/$name
+                  -c:a libfdk_aac -b:a 32k  -c:v libx264 -b:v 128K
+                  -f flv rtmp://localhost/hls/$name_low
+                  -c:a libfdk_aac -b:a 64k  -c:v libx264 -b:v 256k
+                  -f flv rtmp://localhost/hls/$name_mid
+                  -c:a libfdk_aac -b:a 128k -c:v libx264 -b:v 512K
+                  -f flv rtmp://localhost/hls/$name_hi
+                  -c:a libfdk_aac -b:a 128k -c:v libx264 -b:v 512K
+                  -f flv rtmp://localhost/dash/$name_dash;
+        }
+
+        application hls {
+             live on;
+
+             hls on;
+             hls_path /tmp/hls;
+             hls_nested on;
+
+             hls_variant _low BANDWIDTH=160000;
+             hls_variant _mid BANDWIDTH=320000;
+             hls_variant _hi  BANDWIDTH=640000;
+        }
+
+        application dash {
+            live on;
+
+            dash on;
+            dash_path /tmp/dash;
+            dash_nested on;
+        }
+    }
+}
+
+http {
+    server {
+        listen 80;
+
+        location /hls {
+            # Serve HLS fragments
+            types {
+                application/vnd.apple.mpegurl m3u8;
+                video/mp2t ts;
+            }
+            root /tmp;
+            add_header Cache-Control no-cache;
+            add_header 'Access-Control-Allow-Origin' '*';
+        }
+
+        location /dash {
+            root /tmp;
+            add_header Cache-Control no-cache;
+            add_header 'Access-Control-Allow-Origin' '*';
+        }
+    }
+}
